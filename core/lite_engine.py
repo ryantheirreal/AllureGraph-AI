@@ -15,9 +15,9 @@ from typing import Any, Optional
 class LiteEngine:
     """Lightweight scraper — httpx + BS4 + LLM extraction."""
 
-    def __init__(self, llm_provider: str = "openai", llm_model: Optional[str] = None):
+    def __init__(self, llm_provider: str = "gemini", llm_model: Optional[str] = None):
         self.llm_provider = llm_provider
-        self.llm_model = llm_model or "gpt-4o-mini"
+        self.llm_model = llm_model or "gemini-2.0-flash"
         self.headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -79,19 +79,17 @@ class LiteEngine:
         return text
 
     async def _extract_with_llm(self, text: str, prompt: str, url: str = "") -> Any:
-        """Use LLM to extract structured data from text."""
-        api_key = os.getenv("OPENAI_API_KEY")
+        """Use Gemini LLM to extract structured data from text."""
+        api_key = os.getenv("GEMINI_API_KEY")
 
         if not api_key:
             # Fallback: return raw text chunks
-            return {"raw_text": text[:2000], "note": "Set OPENAI_API_KEY for AI extraction"}
+            return {"raw_text": text[:2000], "note": "Set GEMINI_API_KEY for AI extraction"}
 
-        system = (
-            "You are a data extraction AI. Given webpage content, extract exactly what the user asks for. "
-            "Return valid JSON only. Be precise and structured."
-        )
+        user_msg = f"""You are a data extraction AI. Given webpage content, extract exactly what the user asks for.
+Return valid JSON only. Be precise and structured.
 
-        user_msg = f"""URL: {url}
+URL: {url}
 
 Page content:
 {text}
@@ -101,26 +99,27 @@ Extraction task: {prompt}
 Return the extracted data as valid JSON."""
 
         try:
+            endpoint = (
+                f"https://generativelanguage.googleapis.com/v1beta/models/"
+                f"{self.llm_model}:generateContent?key={api_key}"
+            )
             async with httpx.AsyncClient(timeout=60) as client:
                 resp = await client.post(
-                    "https://api.openai.com/v1/chat/completions",
-                    headers={
-                        "Authorization": f"Bearer {api_key}",
-                        "Content-Type": "application/json",
-                    },
+                    endpoint,
+                    headers={"Content-Type": "application/json"},
                     json={
-                        "model": self.llm_model,
-                        "messages": [
-                            {"role": "system", "content": system},
-                            {"role": "user", "content": user_msg},
+                        "contents": [
+                            {"parts": [{"text": user_msg}]}
                         ],
-                        "temperature": 0.1,
-                        "response_format": {"type": "json_object"},
+                        "generationConfig": {
+                            "temperature": 0.1,
+                            "responseMimeType": "application/json",
+                        },
                     },
                 )
                 resp.raise_for_status()
                 data = resp.json()
-                content = data["choices"][0]["message"]["content"]
+                content = data["candidates"][0]["content"]["parts"][0]["text"]
                 return json.loads(content)
         except json.JSONDecodeError:
             return {"raw_response": content}
