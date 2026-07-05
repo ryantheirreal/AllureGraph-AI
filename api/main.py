@@ -123,35 +123,24 @@ async def verify_api_key(authorization: str = Header(...)):
 # === Core Engine ===
 
 async def run_smart_scrape(url: str, prompt: str, output_format: str = "json", **kwargs):
-    """Execute a smart scrape using the AllureGraph engine."""
-    from core.engine import AllureGraphEngine
+    """Execute a smart scrape using the lite engine (free tier)."""
+    from core.lite_engine import LiteEngine
 
-    engine = AllureGraphEngine(
+    engine = LiteEngine(
         llm_provider=kwargs.get("llm_provider", "openai"),
         llm_model=kwargs.get("llm_model"),
     )
 
-    result = await engine.smart_scrape(
-        url=url,
-        prompt=prompt,
-        output_format=output_format,
-        headless=kwargs.get("headless", True),
-        proxy=kwargs.get("proxy"),
-    )
-
+    result = await engine.scrape(url=url, prompt=prompt)
     return result
 
 
 async def run_search_scrape(query: str, prompt: str, max_results: int = 5, **kwargs):
     """Execute a search + extract pipeline."""
-    from core.engine import AllureGraphEngine
+    from core.lite_engine import LiteEngine
 
-    engine = AllureGraphEngine()
-    result = await engine.search_and_extract(
-        query=query,
-        prompt=prompt,
-        max_results=max_results,
-    )
+    engine = LiteEngine()
+    result = await engine.search(query=query, prompt=prompt, max_results=max_results)
     return result
 
 
