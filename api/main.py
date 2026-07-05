@@ -16,6 +16,7 @@ from datetime import datetime
 
 from fastapi import FastAPI, HTTPException, Depends, Header, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 
 app = FastAPI(
@@ -146,14 +147,16 @@ async def run_search_scrape(query: str, prompt: str, max_results: int = 5, **kwa
 
 # === Routes ===
 
-@app.get("/")
-async def root():
-    return {
-        "name": "AllureGraph-AI",
-        "version": "1.0.0",
-        "docs": "/docs",
-        "status": "operational",
-    }
+@app.get("/", response_class=HTMLResponse)
+async def root(accept: str = Header(default="text/html")):
+    if "application/json" in accept:
+        from fastapi.responses import JSONResponse
+        return JSONResponse({"name": "AllureGraph-AI", "version": "1.0.0", "docs": "/docs", "status": "operational"})
+    import pathlib
+    landing = pathlib.Path(__file__).parent / "static" / "index.html"
+    if landing.exists():
+        return landing.read_text(encoding="utf-8")
+    return "<h1>AllureGraph AI</h1><p><a href='/docs'>API Docs</a></p>"
 
 
 @app.get("/health")
