@@ -1,0 +1,61 @@
+[project]
+name = "alluregraph-ai"
+version = "1.0.0"
+description = "AI-powered scraping & intelligence engine for social sellers"
+authors = [
+    { name = "AllureVIPs", email = "dev@allurevips.fun" },
+]
+readme = "README.md"
+requires-python = ">=3.12,<4.0"
+
+dependencies = [
+    # API
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.10.0",
+    "python-multipart>=0.0.12",
+    "httpx>=0.28.0",
+
+    # Core Engine
+    "scrapegraphai>=2.1.0",
+    "langchain>=1.2.0",
+    "langchain-openai>=1.1.0",
+    "langchain-community>=0.4.0",
+    "playwright>=1.57.0",
+    "beautifulsoup4>=4.14.0",
+    "html2text>=2025.4.0",
+
+    # Queue & Cache
+    "redis>=5.2.0",
+    "celery>=5.4.0",
+
+    # Billing
+    "stripe>=11.0.0",
+
+    # Database
+    "supabase>=2.11.0",
+]
+
+[project.optional-dependencies]
+anthropic = ["langchain-anthropic>=0.3.0"]
+ollama = ["langchain-ollama>=1.0.0"]
+ocr = ["surya-ocr>=0.5.0", "pillow>=10.4.0"]
+all = [
+    "langchain-anthropic>=0.3.0",
+    "langchain-ollama>=1.0.0",
+    "surya-ocr>=0.5.0",
+    "pillow>=10.4.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
