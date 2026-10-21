@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+<defs>
+ <linearGradient id="base" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#18212C"/><stop offset="0.5" stop-color="#090D14"/><stop offset="1" stop-color="#05080E"/></linearGradient>
+ <radialGradient id="glow"><stop stop-color="#177885" stop-opacity=".50"/><stop offset=".6" stop-color="#0C465A" stop-opacity=".12"/><stop offset="1" stop-color="#0B1921" stop-opacity="0"/></radialGradient>
+ <linearGradient id="stroke" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#B1FFEA"/><stop offset=".50" stop-color="#4ADCCB"/><stop offset="1" stop-color="#278CAD"/></linearGradient>
+ <linearGradient id="arrow" x1="0" x2="0.9" y1="0" y2="1"><stop stop-color="#F1FFF9"/><stop offset=".55" stop-color="#BCFAE9"/><stop offset="1" stop-color="#61E5DA"/></linearGradient>
+ <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="18"/></filter>
+ <filter id="blur" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="36"/></filter>
+</defs>
+<rect x="10" y="10" width="1004" height="1004" rx="216" fill="url(#base)"/>
+<circle cx="518" cy="463" r="450" fill="url(#glow)"/>
+<ellipse cx="435" cy="133" rx="300" ry="60" fill="#B7FFFA" opacity=".05" filter="url(#blur)"/>
+<rect x="24" y="24" width="976" height="976" rx="206" fill="none" stroke="#C0F1F0" stroke-opacity=".16" stroke-width="3"/>
+<rect x="44" y="44" width="936" height="936" rx="190" fill="none" stroke="#E0FAFC" stroke-opacity=".06" stroke-width="1"/>
+<!-- singular rounded play silhouette, a rounded-corner triangle with a tiny bottom notch -->
+<path d="M 342 262 Q 342 226 377 245 L 788 478 Q 823 499 789 521 L 671 593" fill="none" stroke="#13D7D1" stroke-opacity=".19" stroke-width="78" stroke-linecap="round" stroke-linejoin="round" filter="url(#shadow)"/>
+<path d="M 342 262 Q 342 226 377 245 L 788 478 Q 823 499 789 521 L 676 587" fill="none" stroke="url(#stroke)" stroke-width="57" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 342 263 L 342 552" stroke="url(#stroke)" stroke-width="57" stroke-linecap="round"/>
+<!-- large clean down-arrow integrated into playback design -->
+<path d="M 514 376 L 514 619" stroke="#0DE0C9" stroke-opacity=".25" stroke-width="76" stroke-linecap="round" filter="url(#shadow)"/>
+<path d="M 514 375 L 514 622" stroke="url(#arrow)" stroke-width="58" stroke-linecap="round"/>
+<path d="M 421 558 L 514 657 L 608 558" fill="none" stroke="url(#arrow)" stroke-width="56" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 346 696 L 346 717 Q 346 751 382 751 L 648 751 Q 683 751 683 717 L 683 696" stroke="url(#stroke)" stroke-width="34" fill="none" stroke-linecap="round"/>
+</svg>

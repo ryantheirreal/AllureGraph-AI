@@ -1,27 +1,24 @@
-# Render Blueprint — AllureGraph-AI
-# Deploy: connect this repo to Render, it auto-detects this file
-
+# Example infrastructure blueprint; no external deployment is created by this file.
 services:
   - type: web
-    name: alluregraph-api
-    runtime: python
-    buildCommand: pip install -r api/requirements.txt
-    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
-    envVars:
-      - key: PYTHON_VERSION
-        value: "3.12"
-      - key: OPENAI_API_KEY
-        sync: false
-      - key: ANTHROPIC_API_KEY
-        sync: false
-      - key: SUPABASE_URL
-        sync: false
-      - key: SUPABASE_SERVICE_KEY
-        sync: false
-      - key: REDIS_URL
-        sync: false
-      - key: STRIPE_SECRET_KEY
-        sync: false
-    plan: free
+    name: saveflow-video-studio
+    runtime: docker
+    plan: 1c-2g
     healthCheckPath: /health
-    autoDeploy: true
+    disk:
+      name: saveflow-media
+      mountPath: /data
+      sizeGB: 10
+    envVars:
+      - key: SAVEFLOW_OUTPUT_DIR
+        value: /data
+      - key: SAVEFLOW_MAX_BYTES
+        value: "524288000"
+      - key: SAVEFLOW_UPLOAD_MAX_BYTES
+        value: "209715200"
+      - key: SAVEFLOW_API_TOKEN
+        sync: false
+      - key: SAVEFLOW_PUBLIC_URL
+        sync: false
+      - key: SAVEFLOW_ALLOWED_ORIGINS
+        sync: false
